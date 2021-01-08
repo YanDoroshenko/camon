@@ -44,33 +44,17 @@ quit cleanup = do
     cleanup
     mainQuit
 
-updateIcon :: StatusIcon -> Maybe String -> IO ()
-updateIcon icon path = case path of
-                         Just p -> do
-                             statusIconSetFromFile icon p
-                         Nothing -> statusIconSetFromFile icon "/home/yan/Pictures/logo.svg"
-
 setAccessed :: StatusIcon -> IO ()
 setAccessed icon = do
     putStrLn "Accessed"
-    updateIcon icon $ Just activeIcon
+    statusIconSetFromFile icon activeIcon
 
 setCreated :: StatusIcon -> IO ()
 setCreated icon = do
     putStrLn "Created"
-    updateIcon icon $ Just onIcon
+    statusIconSetFromFile icon activeIcon
 
 setDeleted :: StatusIcon -> IO ()
 setDeleted icon = do
     putStrLn "Deleted"
-    updateIcon icon $ Nothing
-
-setOpened :: StatusIcon -> IO ()
-setOpened icon = do
-    putStrLn "Opened"
-    updateIcon icon $ Just activeIcon
-
-setClosed :: StatusIcon -> IO ()
-setClosed icon = do
-    putStrLn "Closed"
-    updateIcon icon $ Just onIcon
+    statusIconSetFromFile icon activeIcon

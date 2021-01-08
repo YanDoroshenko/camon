@@ -1,6 +1,6 @@
 module Main where
 
-import TrayIcon (init, run, setAccessed, setCreated, setDeleted, setOpened, setClosed)
+import TrayIcon (init, run, setAccessed, setCreated, setDeleted)
 import Watcher
 import Prelude (IO)
 import System.INotify
@@ -13,4 +13,4 @@ main = do
     run icon (close watch)
 
 eventFunctions :: StatusIcon -> EventFunctions IO
-eventFunctions icon = EventFunctions (setAccessed icon) (setCreated icon) (setDeleted icon) (setOpened icon) (setClosed icon)
+eventFunctions icon = EventFunctions (setAccessed icon) (setCreated icon) (setDeleted icon)

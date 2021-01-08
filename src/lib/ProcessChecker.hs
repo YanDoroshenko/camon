@@ -1,13 +1,15 @@
-module ProcessChecker where
+module ProcessChecker (fileInUse, filesInUse) where
 
-import System.Process
-import GHC.IO.Exception
+import System.Process (readProcessWithExitCode)
+import System.Exit
 
-checkFileInUse :: FilePath -> IO Bool
-checkFileInUse p = do
-    (\(s, _, _) -> statusSuccess s) <$> readProcessWithExitCode "fuser" [p] ""
+filesInUse :: Traversable t => t FilePath -> IO Bool
+filesInUse ps = (any id) <$> (sequence $ fileInUse <$> ps)
 
-statusSuccess :: ExitCode -> Bool
-statusSuccess status = case status of
-                         ExitSuccess -> True
-                         ExitFailure 1 -> False
+fileInUse :: FilePath -> IO Bool
+fileInUse p = (\(s, _, _) -> codeSuccess s) <$> readProcessWithExitCode "fuser" [p] ""
+
+codeSuccess :: ExitCode -> Bool
+codeSuccess ExitSuccess = True
+codeSuccess (ExitFailure _) = False
+

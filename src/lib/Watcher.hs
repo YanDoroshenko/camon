@@ -1,6 +1,6 @@
 module Watcher where
 
-import Config (dir, pathPrefix)
+import Resources (dir, pathPrefix)
 import System.INotify
 import Data.Maybe (fromMaybe)
 import Data.ByteString.Char8 (ByteString, pack, stripPrefix)
@@ -8,9 +8,7 @@ import Data.ByteString.Char8 (ByteString, pack, stripPrefix)
 data EventFunctions m = EventFunctions {
     accessed :: m (),
     created :: m (),
-    deleted :: m (),
-    opened :: m (),
-    closed :: m ()
+    deleted :: m ()
 }
 
 eventVarieties :: [EventVariety]
@@ -26,11 +24,11 @@ close = removeWatch
 
 process :: Monad m => EventFunctions m -> Event -> m ()
 process fs e = fromMaybe (return ()) $ case e of
-    Accessed _ p -> Nothing --applyMatching (accessed fs) $ p
+    Accessed _ p -> applyMatching (accessed fs) $ p
     Created _ p -> applyMatching (created fs) $ Just p
     Deleted _ p -> applyMatching (deleted fs) $ Just p
-    Opened _ p -> applyMatching (opened fs) $ p
-    Closed _ p _ -> applyMatching (closed fs) $ p
+    Opened _ p -> applyMatching (accessed fs) $ p
+    Closed _ p _ -> applyMatching (accessed fs) $ p
     _ -> Nothing
 
 applyMatching :: Monad m => m () -> Maybe ByteString -> Maybe (m ())
