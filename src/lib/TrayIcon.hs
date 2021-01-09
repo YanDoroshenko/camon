@@ -1,7 +1,7 @@
 module TrayIcon (initIcon, run, setOn, setOff, setInUse) where
 
 import Data.Time.Clock (getCurrentTime)
-import GI.Gtk (Widget, StatusIcon, mainQuit, menuItemNewWithLabel, menuNew, menuPopup, menuShellAppend, noMenuPositionFunc, onMenuItemActivate, onStatusIconPopupMenu, statusIconNew, statusIconSetFromFile, statusIconSetHasTooltip, statusIconSetTooltipText, statusIconSetVisible, widgetShowAll)
+import GI.Gtk (Widget, StatusIcon, mainQuit, menuItemNewWithLabel, menuNew, menuPopup, menuShellAppend, noMenuPositionFunc, onMenuItemActivate, onStatusIconPopupMenu, statusIconNew, statusIconGetTooltipText, statusIconSetFromFile, statusIconSetTooltipText, statusIconSetVisible, widgetShowAll)
 
 import qualified GI.Gtk as Gtk (main, init)
 import Data.Text (Text, pack)
@@ -43,22 +43,28 @@ setInUse :: StatusIcon -> [String] -> IO ()
 setInUse icon devices = do
     time <- getCurrentTime
     putStrLn $ (show time) ++ " InUse"
-    statusIconSetTooltipText icon $ getTooltip devices
+    setTooltipIfChanged icon $ getTooltip devices
     statusIconSetFromFile icon inUseIcon
 
 setOn :: StatusIcon -> [String] -> IO ()
 setOn icon devices = do
     time <- getCurrentTime
     putStrLn $ (show time) ++ " On"
-    statusIconSetTooltipText icon $ getTooltip devices
+    setTooltipIfChanged icon $ getTooltip devices
     statusIconSetFromFile icon onIcon
 
 setOff :: StatusIcon -> IO ()
 setOff icon = do
     time <- getCurrentTime
     putStrLn $ (show time) ++ " Off"
-    statusIconSetTooltipText icon $ pack noCamera
+    setTooltipIfChanged icon $ pack noCamera
     statusIconSetFromFile icon offIcon
 
 getTooltip :: [String] -> Text
 getTooltip = pack . (foldr (++) "") . (intersperse "\n")
+
+setTooltipIfChanged :: StatusIcon -> Text -> IO ()
+setTooltipIfChanged icon tooltip = do
+    t <- statusIconGetTooltipText icon
+    if (t == (Just tooltip)) then return ()
+                      else statusIconSetTooltipText icon tooltip
