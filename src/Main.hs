@@ -9,8 +9,8 @@ import Config (dir, filePrefix)
 
 main :: IO ()
 main = do
-      status <- getStatus
       icon <- initIcon
+      updateIcon icon
       watch <- watch dir filePrefix $ updateIcon icon
       run icon (close watch)
       return ()
