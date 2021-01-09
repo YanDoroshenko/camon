@@ -1,12 +1,8 @@
 module TrayIcon (initIcon, run, setOn, setOff, setInUse) where
 
 import Data.Time.Clock (getCurrentTime)
-import GI.Gtk
-       (Widget, StatusIcon, noMenuPositionFunc, onMenuItemActivate,
-        menuShellAppend, menuItemNewWithLabel, mainQuit, menuNew,
-        onStatusIconActivate, menuPopup, widgetShowAll,
-        onStatusIconPopupMenu, statusIconSetFromFile, statusIconSetHasTooltip, statusIconSetTooltipText,
-        statusIconSetVisible, statusIconNew)
+import GI.Gtk (Widget, StatusIcon, mainQuit, menuItemNewWithLabel, menuNew, menuPopup, menuShellAppend, noMenuPositionFunc, onMenuItemActivate, onStatusIconPopupMenu, statusIconNew, statusIconSetFromFile, statusIconSetHasTooltip, statusIconSetTooltipText, statusIconSetVisible, widgetShowAll)
+
 import qualified GI.Gtk as Gtk (main, init)
 import Data.Text (Text, pack)
 import Data.List (intersperse)
@@ -15,9 +11,7 @@ import Resources
 initIcon :: IO StatusIcon
 initIcon = do
     Gtk.init Nothing
-    icon <- statusIconNew
-    onStatusIconActivate icon $ putStrLn "'activate' signal triggered"
-    return icon
+    statusIconNew
 
 run :: StatusIcon -> IO () -> IO ()
 run icon cleanup = do
