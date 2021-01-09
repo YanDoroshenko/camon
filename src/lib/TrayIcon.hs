@@ -1,5 +1,6 @@
-module TrayIcon where
+module TrayIcon (initIcon, run, setOn, setOff, setInUse) where
 
+import Data.Time.Clock (getCurrentTime)
 import GI.Gio.Objects.Notification(notificationNew)
 import GI.Gtk
        (Button, StatusIcon, noMenuPositionFunc, onMenuItemActivate,
@@ -9,10 +10,10 @@ import GI.Gtk
         statusIconSetVisible, statusIconNewFromFile, buttonNew)
 import qualified GI.Gtk as Gtk (main, init)
 import Data.Text (pack)
-import Resources
+import Resources (onIcon, offIcon, inUseIcon)
 
-init :: IO StatusIcon
-init = do
+initIcon :: IO StatusIcon
+initIcon = do
     Gtk.init Nothing
     icon <- statusIconNewFromFile "img/cameramonitor.svg"
     onStatusIconActivate icon $ putStrLn "'activate' signal triggered"
@@ -40,21 +41,25 @@ mkmenu cleanup = do
                     menuShellAppend menu i
                     onMenuItemActivate i act
 
+quit :: IO () -> IO ()
 quit cleanup = do
     cleanup
     mainQuit
 
-setAccessed :: StatusIcon -> IO ()
-setAccessed icon = do
-    putStrLn "Accessed"
-    statusIconSetFromFile icon activeIcon
+setInUse :: StatusIcon -> IO ()
+setInUse icon = do
+    time <- getCurrentTime
+    putStrLn $ (show time) ++ " InUse"
+    statusIconSetFromFile icon inUseIcon
 
-setCreated :: StatusIcon -> IO ()
-setCreated icon = do
-    putStrLn "Created"
-    statusIconSetFromFile icon activeIcon
+setOn :: StatusIcon -> IO ()
+setOn icon = do
+    time <- getCurrentTime
+    putStrLn $ (show time) ++ " On"
+    statusIconSetFromFile icon onIcon
 
-setDeleted :: StatusIcon -> IO ()
-setDeleted icon = do
-    putStrLn "Deleted"
-    statusIconSetFromFile icon activeIcon
+setOff :: StatusIcon -> IO ()
+setOff icon = do
+    time <- getCurrentTime
+    putStrLn $ (show time) ++ " Off"
+    statusIconSetFromFile icon offIcon

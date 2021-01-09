@@ -1,9 +1,10 @@
-module FileChecker where
+module FileChecker (findMatching) where
 
-import System.Directory (doesFileExist)
+import System.Directory (listDirectory)
+import Data.ByteString.Char8 (ByteString, pack, stripPrefix)
 
-fileExists :: FilePath -> IO Bool
-fileExists = doesFileExist
+findMatching :: FilePath -> FilePath -> IO [FilePath]
+findMatching dir filePrefix = (filter $ match filePrefix) <$> (listDirectory dir)
 
-anyExists :: Traversable t => t FilePath -> IO Bool
-anyExists ps = (any id) <$> (sequence $ fileExists <$> ps)
+match :: String -> String -> Bool
+match prefix str = not $ null $ stripPrefix (pack prefix) (pack str)

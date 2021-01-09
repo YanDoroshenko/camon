@@ -22,8 +22,8 @@ library
   exposed-modules:     Watcher
                      , TrayIcon
                      , Resources
-                     , Config
                      , ProcessChecker
+                     , FileChecker
   build-depends:       base >= 4.14 && < 5
                      , haskell-gi-base
                      , gi-gtk == 3.0.*
@@ -32,16 +32,16 @@ library
                      , text
                      , bytestring
                      , process
-                     , mtl
+                     , directory
+                     , time
   default-language:    Haskell2010
 
 executable camon
   main-is:             Main.hs
-  -- other-modules:
+  other-modules:       Config
   -- other-extensions:
   build-depends:       base >= 4.14 && < 5
                      , camon
-                     , hinotify
                      , gi-gtk == 3.0.*
   hs-source-dirs:      src
   ghc-options:         -threaded

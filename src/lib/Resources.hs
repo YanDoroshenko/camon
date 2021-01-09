@@ -3,11 +3,8 @@ module Resources where
 onIcon :: FilePath
 onIcon = "img/cameramonitor_on.svg"
 
-activeIcon :: FilePath
-activeIcon = "img/cameramonitor_active.svg"
+inUseIcon :: FilePath
+inUseIcon = "img/cameramonitor_in_use.svg"
 
-dir :: FilePath
-dir = "/dev"
-
-pathPrefix :: FilePath
-pathPrefix = "/dev/video"
+offIcon :: FilePath
+offIcon = "img/cameramonitor_off.svg"
