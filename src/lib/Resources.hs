@@ -1,13 +1,13 @@
 module Resources where
 
 onIcon :: FilePath
-onIcon = "img/cameramonitor_on.svg"
+onIcon = "img/camon_on.svg"
 
 inUseIcon :: FilePath
-inUseIcon = "img/cameramonitor_in_use.svg"
+inUseIcon = "img/camon_in_use.svg"
 
 offIcon :: FilePath
-offIcon = "img/cameramonitor_off.svg"
+offIcon = "img/camon_off.svg"
 
 quitStr :: String
 quitStr = "Quit"
