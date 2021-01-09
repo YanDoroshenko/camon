@@ -11,3 +11,6 @@ offIcon = "img/cameramonitor_off.svg"
 
 quitStr :: String
 quitStr = "Quit"
+
+noCamera :: String
+noCamera = "No camera found"

@@ -20,18 +20,19 @@ getStatus = do
     files <- findMatching dir filePrefix
     if (null files) then (return Off)
     else do
-        inUse <- filesInUse $ (absolutePath dir) <$> files
-        return (if (inUse) then InUse else On)
+        let absoluteFiles = (absolutePath dir) <$> files
+        inUse <- filesInUse absoluteFiles
+        return (if (null inUse) then (On absoluteFiles) else (InUse inUse))
 
-data Status = Off | On | InUse
+data Status = Off | On [String] | InUse [String]
 
 updateIcon :: StatusIcon -> IO ()
 updateIcon icon = do
     status <- getStatus
     case status of
       Off -> setOff icon
-      On -> setOn icon
-      InUse -> setInUse icon
+      On devices -> setOn icon devices
+      InUse devices -> setInUse icon devices
 
 absolutePath :: FilePath -> FilePath -> FilePath
 absolutePath dir name = dir ++ "/" ++ name
