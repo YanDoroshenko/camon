@@ -31,7 +31,7 @@ run icon cleanup = do
 
 mkmenu cleanup = do
     m <- menuNew
-    mapM_ (mkitem m) [(pack quitStr, cleanup)]
+    mapM_ (mkitem m) [(pack quitStr, quit cleanup)]
     return m
         where
             mkitem menu (label,act) =
