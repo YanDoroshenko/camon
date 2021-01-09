@@ -11,8 +11,8 @@ main :: IO ()
 main = do
       icon <- initIcon
       updateIcon icon
-      watch <- watch dir filePrefix $ updateIcon icon
-      run icon (close watch)
+      (inotify, watch) <- watch dir filePrefix $ updateIcon icon
+      run icon (close inotify watch)
       return ()
 
 getStatus :: IO Status

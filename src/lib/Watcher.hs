@@ -7,13 +7,16 @@ import Data.ByteString.Char8 (ByteString, pack, stripPrefix)
 eventVarieties :: [EventVariety]
 eventVarieties = [Create, Delete, Open, CloseWrite, CloseNoWrite]
 
-watch :: FilePath -> FilePath -> IO () -> IO WatchDescriptor
+watch :: FilePath -> FilePath -> IO () -> IO (INotify, WatchDescriptor)
 watch dir filePrefix f = do
     inotify <- initINotify
-    addWatch inotify eventVarieties (pack dir) $ process filePrefix f
+    watch <- addWatch inotify eventVarieties (pack dir) $ process filePrefix f
+    return (inotify, watch)
 
-close :: WatchDescriptor -> IO ()
-close = removeWatch
+close :: INotify -> WatchDescriptor -> IO ()
+close inotify watch = do
+    removeWatch watch
+    killINotify inotify
 
 process :: Monad m => FilePath -> m () -> Event -> m ()
 process filePrefix f e = fromMaybe (return ()) $ case e of
